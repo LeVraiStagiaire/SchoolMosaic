@@ -1,1 +1,1 @@
-# SchoolMosaic
+![](https://raw.githubusercontent.com/LeStagiaire/SchoolMosaic/master/.github/SchoolMosaic%20Banniere.png)

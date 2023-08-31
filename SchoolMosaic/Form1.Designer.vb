@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'Form remplace la méthode Dispose pour nettoyer la liste des composants.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,10 +20,10 @@ Partial Class Form1
     'REMARQUE : la procédure suivante est requise par le Concepteur Windows Form
     'Elle peut être modifiée à l'aide du Concepteur Windows Form.  
     'Ne la modifiez pas à l'aide de l'éditeur de code.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.DatabaseConnection = New MySql.Data.MySqlClient.MySqlConnection()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.ComServer = New GSF.Communication.TcpServer(Me.components)
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FichierToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -112,7 +112,7 @@ Partial Class Form1
         '
         Me.FermerBaseToolStripMenuItem.Enabled = False
         Me.FermerBaseToolStripMenuItem.Name = "FermerBaseToolStripMenuItem"
-        Me.FermerBaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.FermerBaseToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
         Me.FermerBaseToolStripMenuItem.Text = "&Fermer base"
         '
         'ToolStripMenuItem1
@@ -137,7 +137,7 @@ Partial Class Form1
         '
         Me.DémarrerToolStripMenuItem.Enabled = False
         Me.DémarrerToolStripMenuItem.Name = "DémarrerToolStripMenuItem"
-        Me.DémarrerToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DémarrerToolStripMenuItem.Size = New System.Drawing.Size(123, 22)
         Me.DémarrerToolStripMenuItem.Text = "&Démarrer"
         '
         'ArrêterToolStripMenuItem
@@ -185,6 +185,7 @@ Partial Class Form1
         'AppLogo
         '
         Me.AppLogo.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AppLogo.Image = Global.SchoolMosaic.Server.My.Resources.Resources.SchoolMosaic_Logo1
         Me.AppLogo.Location = New System.Drawing.Point(0, 0)
         Me.AppLogo.Name = "AppLogo"
         Me.AppLogo.Size = New System.Drawing.Size(103, 95)
@@ -369,6 +370,7 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Form1"
         Me.Text = "SchoolMosaic Serveur"
@@ -398,7 +400,6 @@ Partial Class Form1
 
     End Sub
 
-    Friend WithEvents DatabaseConnection As MySql.Data.MySqlClient.MySqlConnection
     Friend WithEvents ComServer As GSF.Communication.TcpServer
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents FichierToolStripMenuItem As ToolStripMenuItem
