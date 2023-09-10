@@ -65,6 +65,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Recherche une chaîne localisée semblable à Erreur.
+        '''</summary>
+        Friend Shared ReadOnly Property _Error() As String
+            Get
+                Return ResourceManager.GetString("Error", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Recherche une chaîne localisée semblable à F&amp;ermer la base.
         '''</summary>
         Friend Shared ReadOnly Property CloseBaseMenu() As String
@@ -106,6 +115,24 @@ Namespace My.Resources
         Friend Shared ReadOnly Property DateTimeColumn() As String
             Get
                 Return ResourceManager.GetString("DateTimeColumn", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Recherche une chaîne localisée semblable à Veuillez entrer un mot de passe pour le compte administrateur !.
+        '''</summary>
+        Friend Shared ReadOnly Property EnterAdminPassword() As String
+            Get
+                Return ResourceManager.GetString("EnterAdminPassword", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Recherche une chaîne localisée semblable à Veuillez entrer un nom pour la base !.
+        '''</summary>
+        Friend Shared ReadOnly Property EnterBaseName() As String
+            Get
+                Return ResourceManager.GetString("EnterBaseName", resourceCulture)
             End Get
         End Property
         
@@ -160,6 +187,24 @@ Namespace My.Resources
         Friend Shared ReadOnly Property OverviewTab() As String
             Get
                 Return ResourceManager.GetString("OverviewTab", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Recherche une chaîne localisée semblable à Les mots de passes entrés ne correspondent pas !.
+        '''</summary>
+        Friend Shared ReadOnly Property PasswordsDontMatch() As String
+            Get
+                Return ResourceManager.GetString("PasswordsDontMatch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Recherche une chaîne localisée semblable à Veuillez sélectionner au moins un jour !.
+        '''</summary>
+        Friend Shared ReadOnly Property SelectADay() As String
+            Get
+                Return ResourceManager.GetString("SelectADay", resourceCulture)
             End Get
         End Property
         

@@ -59,12 +59,11 @@ Partial Class NewBase
         '
         'CreateButton
         '
-        Me.CreateButton.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.CreateButton.ForeColor = System.Drawing.Color.Green
         Me.CreateButton.Location = New System.Drawing.Point(362, 515)
         Me.CreateButton.Name = "CreateButton"
         Me.CreateButton.Size = New System.Drawing.Size(75, 23)
-        Me.CreateButton.TabIndex = 0
+        Me.CreateButton.TabIndex = 19
         Me.CreateButton.Text = "&Créer"
         Me.CreateButton.UseVisualStyleBackColor = True
         '
@@ -75,7 +74,7 @@ Partial Class NewBase
         Me.CancelButton.Location = New System.Drawing.Point(281, 515)
         Me.CancelButton.Name = "CancelButton"
         Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 1
+        Me.CancelButton.TabIndex = 20
         Me.CancelButton.Text = "&Annuler"
         Me.CancelButton.UseVisualStyleBackColor = True
         '
@@ -96,7 +95,7 @@ Partial Class NewBase
         Me.Monday.Location = New System.Drawing.Point(27, 54)
         Me.Monday.Name = "Monday"
         Me.Monday.Size = New System.Drawing.Size(52, 17)
-        Me.Monday.TabIndex = 3
+        Me.Monday.TabIndex = 1
         Me.Monday.Text = "Lundi"
         Me.Monday.UseVisualStyleBackColor = True
         '
@@ -108,7 +107,7 @@ Partial Class NewBase
         Me.Tuesday.Location = New System.Drawing.Point(27, 77)
         Me.Tuesday.Name = "Tuesday"
         Me.Tuesday.Size = New System.Drawing.Size(52, 17)
-        Me.Tuesday.TabIndex = 4
+        Me.Tuesday.TabIndex = 2
         Me.Tuesday.Text = "Mardi"
         Me.Tuesday.UseVisualStyleBackColor = True
         '
@@ -120,7 +119,7 @@ Partial Class NewBase
         Me.Wednesday.Location = New System.Drawing.Point(27, 100)
         Me.Wednesday.Name = "Wednesday"
         Me.Wednesday.Size = New System.Drawing.Size(67, 17)
-        Me.Wednesday.TabIndex = 5
+        Me.Wednesday.TabIndex = 3
         Me.Wednesday.Text = "Mercredi"
         Me.Wednesday.UseVisualStyleBackColor = True
         '
@@ -132,7 +131,7 @@ Partial Class NewBase
         Me.Thursday.Location = New System.Drawing.Point(27, 124)
         Me.Thursday.Name = "Thursday"
         Me.Thursday.Size = New System.Drawing.Size(51, 17)
-        Me.Thursday.TabIndex = 6
+        Me.Thursday.TabIndex = 4
         Me.Thursday.Text = "Jeudi"
         Me.Thursday.UseVisualStyleBackColor = True
         '
@@ -144,7 +143,7 @@ Partial Class NewBase
         Me.Friday.Location = New System.Drawing.Point(148, 54)
         Me.Friday.Name = "Friday"
         Me.Friday.Size = New System.Drawing.Size(68, 17)
-        Me.Friday.TabIndex = 7
+        Me.Friday.TabIndex = 5
         Me.Friday.Text = "Vendredi"
         Me.Friday.UseVisualStyleBackColor = True
         '
@@ -154,7 +153,7 @@ Partial Class NewBase
         Me.Saturday.Location = New System.Drawing.Point(148, 77)
         Me.Saturday.Name = "Saturday"
         Me.Saturday.Size = New System.Drawing.Size(61, 17)
-        Me.Saturday.TabIndex = 8
+        Me.Saturday.TabIndex = 6
         Me.Saturday.Text = "Samedi"
         Me.Saturday.UseVisualStyleBackColor = True
         '
@@ -164,7 +163,7 @@ Partial Class NewBase
         Me.Sunday.Location = New System.Drawing.Point(148, 100)
         Me.Sunday.Name = "Sunday"
         Me.Sunday.Size = New System.Drawing.Size(74, 17)
-        Me.Sunday.TabIndex = 9
+        Me.Sunday.TabIndex = 7
         Me.Sunday.Text = "Dimanche"
         Me.Sunday.UseVisualStyleBackColor = True
         '
@@ -194,7 +193,7 @@ Partial Class NewBase
         Me.DailySessionNumber.Location = New System.Drawing.Point(148, 206)
         Me.DailySessionNumber.Name = "DailySessionNumber"
         Me.DailySessionNumber.Size = New System.Drawing.Size(121, 21)
-        Me.DailySessionNumber.TabIndex = 12
+        Me.DailySessionNumber.TabIndex = 9
         '
         'DailySessionText2
         '
@@ -213,7 +212,7 @@ Partial Class NewBase
         Me.DailySessionTime.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.DailySessionTime.Name = "DailySessionTime"
         Me.DailySessionTime.Size = New System.Drawing.Size(56, 20)
-        Me.DailySessionTime.TabIndex = 14
+        Me.DailySessionTime.TabIndex = 10
         Me.DailySessionTime.Value = New Decimal(New Integer() {60, 0, 0, 0})
         '
         'DailySessionText3
@@ -241,7 +240,7 @@ Partial Class NewBase
         Me.DailySessionStart.Name = "DailySessionStart"
         Me.DailySessionStart.ShowUpDown = True
         Me.DailySessionStart.Size = New System.Drawing.Size(147, 20)
-        Me.DailySessionStart.TabIndex = 17
+        Me.DailySessionStart.TabIndex = 11
         Me.DailySessionStart.Value = New Date(2023, 8, 29, 8, 0, 0, 0)
         '
         'DailySessionText5
@@ -260,16 +259,18 @@ Partial Class NewBase
         Me.DailySessionStop.Name = "DailySessionStop"
         Me.DailySessionStop.ShowUpDown = True
         Me.DailySessionStop.Size = New System.Drawing.Size(146, 20)
-        Me.DailySessionStop.TabIndex = 17
+        Me.DailySessionStop.TabIndex = 12
         Me.DailySessionStop.Value = New Date(2023, 8, 29, 17, 0, 0, 0)
         '
         'LunchBreakBox
         '
         Me.LunchBreakBox.AutoSize = True
+        Me.LunchBreakBox.Checked = True
+        Me.LunchBreakBox.CheckState = System.Windows.Forms.CheckState.Checked
         Me.LunchBreakBox.Location = New System.Drawing.Point(44, 269)
         Me.LunchBreakBox.Name = "LunchBreakBox"
         Me.LunchBreakBox.Size = New System.Drawing.Size(137, 17)
-        Me.LunchBreakBox.TabIndex = 19
+        Me.LunchBreakBox.TabIndex = 13
         Me.LunchBreakBox.Text = "Pause méridienne entre"
         Me.LunchBreakBox.UseVisualStyleBackColor = True
         '
@@ -280,7 +281,7 @@ Partial Class NewBase
         Me.LunchBreakStart.Name = "LunchBreakStart"
         Me.LunchBreakStart.ShowUpDown = True
         Me.LunchBreakStart.Size = New System.Drawing.Size(94, 20)
-        Me.LunchBreakStart.TabIndex = 17
+        Me.LunchBreakStart.TabIndex = 14
         Me.LunchBreakStart.Value = New Date(2023, 8, 29, 12, 0, 0, 0)
         '
         'LunchBreakText2
@@ -299,7 +300,7 @@ Partial Class NewBase
         Me.LunchBreakStop.Name = "LunchBreakStop"
         Me.LunchBreakStop.ShowUpDown = True
         Me.LunchBreakStop.Size = New System.Drawing.Size(94, 20)
-        Me.LunchBreakStop.TabIndex = 17
+        Me.LunchBreakStop.TabIndex = 15
         Me.LunchBreakStop.Value = New Date(2023, 8, 29, 13, 0, 0, 0)
         '
         'FirstDayBox
@@ -310,7 +311,7 @@ Partial Class NewBase
         Me.FirstDayBox.Location = New System.Drawing.Point(260, 75)
         Me.FirstDayBox.Name = "FirstDayBox"
         Me.FirstDayBox.Size = New System.Drawing.Size(143, 21)
-        Me.FirstDayBox.TabIndex = 21
+        Me.FirstDayBox.TabIndex = 8
         '
         'FirstDayLabel
         '
@@ -336,7 +337,7 @@ Partial Class NewBase
         Me.AdminPasswordBox.Name = "AdminPasswordBox"
         Me.AdminPasswordBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(8226)
         Me.AdminPasswordBox.Size = New System.Drawing.Size(373, 20)
-        Me.AdminPasswordBox.TabIndex = 24
+        Me.AdminPasswordBox.TabIndex = 16
         '
         'RepeatPasswordLabel
         '
@@ -353,7 +354,7 @@ Partial Class NewBase
         Me.RepeatPasswordBox.Name = "RepeatPasswordBox"
         Me.RepeatPasswordBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(8226)
         Me.RepeatPasswordBox.Size = New System.Drawing.Size(373, 20)
-        Me.RepeatPasswordBox.TabIndex = 24
+        Me.RepeatPasswordBox.TabIndex = 17
         '
         'BaseNameLabel
         '
@@ -369,14 +370,13 @@ Partial Class NewBase
         Me.BaseNameBox.Location = New System.Drawing.Point(30, 472)
         Me.BaseNameBox.Name = "BaseNameBox"
         Me.BaseNameBox.Size = New System.Drawing.Size(373, 20)
-        Me.BaseNameBox.TabIndex = 27
+        Me.BaseNameBox.TabIndex = 18
         '
         'NewBase
         '
         Me.AcceptButton = Me.CreateButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.CancelButton
         Me.ClientSize = New System.Drawing.Size(449, 550)
         Me.Controls.Add(Me.BaseNameBox)
         Me.Controls.Add(Me.BaseNameLabel)

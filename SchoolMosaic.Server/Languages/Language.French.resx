@@ -132,6 +132,15 @@
   <data name="DateTimeColumn" xml:space="preserve">
     <value>Heure de connexion</value>
   </data>
+  <data name="EnterAdminPassword" xml:space="preserve">
+    <value>Veuillez entrer un mot de passe pour le compte administrateur !</value>
+  </data>
+  <data name="EnterBaseName" xml:space="preserve">
+    <value>Veuillez entrer un nom pour la base !</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
   <data name="ExitMenu" xml:space="preserve">
     <value>&amp;Quitter</value>
   </data>
@@ -149,6 +158,12 @@
   </data>
   <data name="OverviewTab" xml:space="preserve">
     <value>Aperçu</value>
+  </data>
+  <data name="PasswordsDontMatch" xml:space="preserve">
+    <value>Les mots de passes entrés ne correspondent pas !</value>
+  </data>
+  <data name="SelectADay" xml:space="preserve">
+    <value>Veuillez sélectionner au moins un jour !</value>
   </data>
   <data name="ServerDisplayNameLabel" xml:space="preserve">
     <value>Nom d'affichage du serveur :</value>
