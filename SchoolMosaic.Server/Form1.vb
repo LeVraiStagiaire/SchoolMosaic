@@ -1,10 +1,7 @@
-﻿Imports System.Configuration
-Imports GSF.Collections
-Imports SchoolMosaic.Server.BaseManager
+﻿Imports SchoolMosaic.Server.BaseManager
 Imports SchoolMosaic.Server.LocalizationManager
 Public Class Form1
 
-    Dim DBConnection As New MySqlConnection
     Dim GUILogger As New Logger("GUI")
     Dim ApplicationLogger As New Logger("Application")
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -43,8 +40,6 @@ Public Class Form1
         ServerDIsplayNameLabel.Text = GetString("ServerDisplayNameLabel")
         GUILogger.Debug("Getting entry for ServerPortLabel")
         ServerPortLabel.Text = GetString("ServerPortLabel")
-        DBConnection.ConnectionString = "server=127.0.0.1;uid=root;pwd=0;"
-        ApplicationLogger.Info("Testing connection to database...")
     End Sub
 
     Private Sub NouvelleBaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NouvelleBaseToolStripMenuItem.Click
@@ -52,54 +47,110 @@ Public Class Form1
         GUILogger.Debug("Opening new base dialog")
         If NewBaseDialog.ShowDialog() = DialogResult.OK Then
             GUILogger.Debug("Result: OK")
+            ApplicationLogger.Info("Creating new database " + NewBaseDialog.BaseNameBox.Text + "...")
+            OpenDatabase()
             CreateDatabase(NewBaseDialog.BaseNameBox.Text)
-            Dim Columns As New List(Of Column) From {
-                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.AutoIncrement, Column.Attribute.NotNull, Column.Attribute.PrimaryKey}),
-                New Column("username", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
-                New Column("password", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
-                New Column("role", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
-            }
+            ApplicationLogger.Info("Database " + NewBaseDialog.BaseNameBox.Text + " created")
+            ApplicationLogger.Info("Creating table 'users'")
             CreateTable("users", New List(Of Column) From {
-                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.AutoIncrement, Column.Attribute.NotNull, Column.Attribute.PrimaryKey}),
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement}),
                 New Column("username", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
                 New Column("password", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
                 New Column("role", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
-            }, New List(Of List(Of String)) From {New List(Of String) From {"NULL"}})
-            Using cmd5 As New MySqlCommand("CREATE TABLE `config` (`id` int(11) NOT NULL AUTO_INCREMENT,`name` varchar(255) NOT NULL,`value` varchar(255) NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;", DBConnection)
-                        cmd5.Transaction = cmd
-                        cmd5.ExecuteNonQuery()
-                    End Using
-                    Using cmd6 As New MySqlCommand("INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES (NULL, 'admin', '@p', 'admin');", DBConnection)
-                        cmd6.Parameters.AddWithValue("@p", NewBaseDialog.AdminPasswordBox.Text)
-                        cmd6.Transaction = cmd
-                        cmd6.ExecuteNonQuery()
-                    End Using
-                    Using cmd7 As New MySqlCommand("INSERT INTO `config` (`id`, `name`, `value`) VALUES (NULL, 'server_display_name', '@dn'), (NULL, 'days_of_work', '@dow'), (NULL, 'first_day', '@fd');", DBConnection)
-                        cmd7.Parameters.AddWithValue("@dn", NewBaseDialog.BaseNameBox.Text)
-                        Dim dow As String = ""
-                        If NewBaseDialog.Monday.Checked Then dow += "1"
-                        If NewBaseDialog.Tuesday.Checked Then dow += "2"
-                        If NewBaseDialog.Wednesday.Checked Then dow += "3"
-                        If NewBaseDialog.Thursday.Checked Then dow += "4"
-                        If NewBaseDialog.Friday.Checked Then dow += "5"
-                        If NewBaseDialog.Saturday.Checked Then dow += "6"
-                        If NewBaseDialog.Sunday.Checked Then dow += "7"
-                        cmd7.Parameters.AddWithValue("@dow", dow)
-                        cmd7.Parameters.AddWithValue("@fd", NewBaseDialog.FirstDayBox.SelectedItem)
-                        cmd7.Transaction = cmd
-                        cmd7.ExecuteNonQuery()
-                    End Using
-                    ApplicationLogger.Debug("Executing query...")
-                    cmd.Commit()
-                    ApplicationLogger.Debug("Query executed")
-                    ApplicationLogger.Info("Base created successfully")
-                Catch ex As MySqlException
-                    cmd.Rollback()
-                    ApplicationLogger.Fatal("Error while creating base", ex)
-                    MessageBox.Show(ex.Message + vbCrLf + ex.SqlState, GetString("DatabaseCreationErrorTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
-            End Using
-            DBConnection.Close()
+            },
+            New List(Of List(Of String)) From {
+                New List(Of String) From {
+                    "NULL",
+                    "admin",
+                    NewBaseDialog.AdminPasswordBox.Text,
+                    "admin"
+                }
+            })
+            ApplicationLogger.Info("Table 'users' created")
+            ApplicationLogger.Info("Creating table 'config'")
+            CreateTable("config", New List(Of Column) From {
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement, Column.Attribute.NotNull}),
+                New Column("name", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("value", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
+            },
+            New List(Of List(Of String)) From {
+                New List(Of String) From {
+                    "NULL",
+                    "server_display_name",
+                    NewBaseDialog.BaseNameBox.Text
+                },
+                New List(Of String) From {
+                    "NULL",
+                    "days_of_work",
+                    If(NewBaseDialog.Monday.Checked, "1", "") + If(NewBaseDialog.Tuesday.Checked, "2", "") + If(NewBaseDialog.Wednesday.Checked, "3", "") + If(NewBaseDialog.Thursday.Checked, "4", "") + If(NewBaseDialog.Friday.Checked, "5", "") + If(NewBaseDialog.Saturday.Checked, "6", "") + If(NewBaseDialog.Sunday.Checked, "7", "")
+                },
+                New List(Of String) From {
+                    "NULL",
+                    "first_day",
+                    NewBaseDialog.FirstDayBox.SelectedItem
+                }
+            })
+            ApplicationLogger.Info("Table 'config' created")
+            ApplicationLogger.Info("Creating table 'students'")
+            CreateTable("students", New List(Of Column) From {
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement, Column.Attribute.NotNull}),
+                New Column("firstname", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("lastname", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("birthday", "date", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("address", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("phone", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("email", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("class", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
+            })
+            ApplicationLogger.Info("Table 'students' created")
+            ApplicationLogger.Info("Creating table 'classes'")
+            CreateTable("classes", New List(Of Column) From {
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement, Column.Attribute.NotNull}),
+                New Column("displayname", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("level", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("teacher", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
+            })
+            ApplicationLogger.Info("Table 'classes' created")
+            ApplicationLogger.Info("Creating table 'teachers'")
+            CreateTable("teachers", New List(Of Column) From {
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement, Column.Attribute.NotNull}),
+                New Column("firstname", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("lastname", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("birthday", "date", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("address", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("phone", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("email", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("subject", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
+            })
+            ApplicationLogger.Info("Table 'teachers' created")
+            ApplicationLogger.Info("Creating table 'courses'")
+            CreateTable("courses", New List(Of Column) From {
+                New Column("id", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.PrimaryKey, Column.Attribute.AutoIncrement, Column.Attribute.NotNull}),
+                New Column("subject", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("teacher", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("class", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("room", "varchar(255)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("day", "int(11)", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("start", "time", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
+                New Column("end", "time", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
+            })
+            ApplicationLogger.Debug("Creating tables references")
+            AddReferences("students", New List(Of Reference) From {
+                New Reference("class", "classes", "id")
+            })
+            AddReferences("classes", New List(Of Reference) From {
+                New Reference("teacher", "teachers", "id")
+            })
+            AddReferences("courses", New List(Of Reference) From {
+                New Reference("teacher", "teachers", "id"),
+                New Reference("class", "classes", "id")
+            })
+            ApplicationLogger.Info("Table 'courses' created")
+            ApplicationLogger.Info("Finished creating database " + NewBaseDialog.BaseNameBox.Text)
+            CloseDatabase()
+            If MessageBox.Show("La base à bien été créée. Souhaitez-vous l'ouvrir ?", "Terminé", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+
+            End If
         End If
     End Sub
 End Class

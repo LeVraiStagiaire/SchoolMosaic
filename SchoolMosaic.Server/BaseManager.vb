@@ -7,6 +7,9 @@ Public Class BaseManager
     Public Shared DBConnection As MySqlConnection
     Public Shared DatabaseLogger As New Logger("Database")
 
+    ''' <summary>
+    ''' Create a new instance of the BaseManager class
+    ''' </summary>
     Public Sub New()
         DatabaseLogger.Debug("Initializing database connection...")
         DBConnection = New MySqlConnection With {
@@ -23,6 +26,24 @@ Public Class BaseManager
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Open connection to database
+    ''' </summary>
+    Public Shared Sub OpenDatabase()
+        DBConnection.Open()
+    End Sub
+
+    ''' <summary>
+    ''' Close connection to database
+    ''' </summary>
+    Public Shared Sub CloseDatabase()
+        DBConnection.Close()
+    End Sub
+
+    ''' <summary>
+    ''' Create a new database
+    ''' </summary>
+    ''' <param name="Name">Database name</param>
     Public Shared Sub CreateDatabase(Name As String)
         DatabaseLogger.Debug("Creating database " + Name + "...")
         Dim Command As New MySqlCommand("CREATE DATABASE " + Name + ";", DBConnection)
@@ -36,6 +57,10 @@ Public Class BaseManager
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Set current database
+    ''' </summary>
+    ''' <param name="Name">Database name</param>
     Private Shared Sub UseDatabase(Name As String)
         Dim Command As New MySqlCommand("USE " + Name + ";", DBConnection)
         Try
@@ -46,17 +71,32 @@ Public Class BaseManager
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Create a table in the current database
+    ''' </summary>
+    ''' <param name="TableName">Name of the table</param>
+    ''' <param name="Columns">List of columns to add to the table</param>
+    ''' <param name="References">List of keys references to other tables</param>
     Public Shared Sub CreateTable(TableName As String, Columns As List(Of Column))
-        DatabaseLogger.Debug("Creating table " + TableName + "...")
         Dim Query As String = "CREATE TABLE " + TableName + " ("
         For Each Column As Column In Columns
             Dim Attributes As String = ""
             For Each Attribute As Column.Attribute In Column.Attributes
-                Attributes += Attribute.ToString() + " "
+                If Attribute = Column.Attribute.AutoIncrement Then
+                    Attributes += "AUTO_INCREMENT "
+                ElseIf Attribute = Column.Attribute.NotNull Then
+                    Attributes += "NOT NULL "
+                ElseIf Attribute = Column.Attribute.PrimaryKey Then
+                    Attributes += "PRIMARY KEY "
+                ElseIf Attribute = Column.Attribute.Unique Then
+                    Attributes += "UNIQUE "
+                End If
             Next
+            Attributes = Attributes.Substring(0, Attributes.Length - 1)
             Query += Column.Name + " " + Column.Type + " " + Attributes + ", "
         Next
         Query = Query.Substring(0, Query.Length - 2) + ");"
+        DatabaseLogger.Debug("Executing query: " + Query)
         Dim Command As New MySqlCommand(Query, DBConnection)
         Try
             Command.ExecuteNonQuery()
@@ -67,6 +107,13 @@ Public Class BaseManager
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Create a table in the current database and insert values
+    ''' </summary>
+    ''' <param name="TableName">Name of the table</param>
+    ''' <param name="Columns">List of columns to add to the table</param>
+    ''' <param name="References">List of keys references to other tables</param>
+    ''' <param name="Values">List of values to insert</param>
     Public Shared Sub CreateTable(TableName As String, Columns As List(Of Column), Values As List(Of List(Of String)))
         Dim CreateCommand As New MySqlCommand()
         Dim InsertCommand As New MySqlCommand()
@@ -75,29 +122,64 @@ Public Class BaseManager
         For Each Column As Column In Columns
             Dim Attributes As String = ""
             For Each Attribute As Column.Attribute In Column.Attributes
-                Attributes += Attribute.ToString() + " "
+                If Attribute = Column.Attribute.AutoIncrement Then
+                    Attributes += "AUTO_INCREMENT "
+                ElseIf Attribute = Column.Attribute.NotNull Then
+                    Attributes += "NOT NULL "
+                ElseIf Attribute = Column.Attribute.PrimaryKey Then
+                    Attributes += "PRIMARY KEY "
+                ElseIf Attribute = Column.Attribute.Unique Then
+                    Attributes += "UNIQUE "
+                End If
             Next
+            Attributes = Attributes.Substring(0, Attributes.Length - 1)
             CreateQuery += Column.Name + " " + Column.Type + " " + Attributes + ", "
         Next
-        CreateQuery += CreateQuery.Substring(0, CreateQuery.Length - 2) + ");"
+        CreateQuery = CreateQuery.Substring(0, CreateQuery.Length - 2) + ");"
+        DatabaseLogger.Debug("Adding query: " + CreateQuery)
         CreateCommand.CommandText = CreateQuery
         CreateCommand.Connection = DBConnection
         CreateCommand.Transaction = Transaction
         CreateCommand.ExecuteNonQuery()
+        DatabaseLogger.Debug("Sucess!")
         Dim InsertQuery As String = "INSERT INTO " + TableName + " VALUES "
         For Each Value As List(Of String) In Values
             InsertQuery += "("
             For Each Item As String In Value
-                InsertQuery += "'" + Item + "', "
+                If Item = "NULL" Then
+                    InsertQuery += Item + ", "
+                Else
+                    InsertQuery += "'" + Item + "', "
+                End If
             Next
             InsertQuery = InsertQuery.Substring(0, InsertQuery.Length - 2) + "), "
         Next
         InsertQuery = InsertQuery.Substring(0, InsertQuery.Length - 2) + ";"
+        DatabaseLogger.Debug("Adding query: " + InsertQuery)
         InsertCommand.CommandText = InsertQuery
         InsertCommand.Connection = DBConnection
         InsertCommand.Transaction = Transaction
         InsertCommand.ExecuteNonQuery()
+        DatabaseLogger.Debug("Sucess!")
+        DatabaseLogger.Debug("Commiting transaction...")
         Transaction.Commit()
+        DatabaseLogger.Debug("Transaction commited")
+    End Sub
+
+    Public Shared Sub AddReferences(Table As String, References As List(Of Reference))
+        For Each Reference As Reference In References
+            Dim Query As String = "ALTER Table " + Table + " ADD CONSTRAINT FK_" + Table + "_" + Reference.Column + "_" + Reference.ForeignTable + "_" + Reference.ForeignColumn + " FOREIGN KEY (" + Reference.Column + ") REFERENCES " + Reference.ForeignTable + "(" + Reference.ForeignColumn + "), "
+            Query = Query.Substring(0, Query.Length - 2) + ";"
+            DatabaseLogger.Debug("Executing query: " + Query)
+            Dim Command As New MySqlCommand(Query, DBConnection)
+            Try
+                Command.ExecuteNonQuery()
+                DatabaseLogger.Debug("References added")
+            Catch ex As MySqlException
+                DatabaseLogger.Fatal("References addition failed", ex)
+                MessageBox.Show(ex.Message + vbCrLf + ex.SqlState, GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        Next
     End Sub
 End Class
 
@@ -118,4 +200,16 @@ Public Class Column
         Unique
         AutoIncrement
     End Enum
+End Class
+
+Public Class Reference
+    Public Column As String
+    Public ForeignTable As String
+    Public ForeignColumn As String
+
+    Public Sub New(Column As String, ForeignTable As String, ForeignColumn As String)
+        Me.Column = Column
+        Me.ForeignTable = ForeignTable
+        Me.ForeignColumn = ForeignColumn
+    End Sub
 End Class
