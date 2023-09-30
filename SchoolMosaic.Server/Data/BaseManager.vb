@@ -76,7 +76,6 @@ Public Class BaseManager
     ''' </summary>
     ''' <param name="TableName">Name of the table</param>
     ''' <param name="Columns">List of columns to add to the table</param>
-    ''' <param name="References">List of keys references to other tables</param>
     Public Shared Sub CreateTable(TableName As String, Columns As List(Of Column))
         Dim Query As String = "CREATE TABLE " + TableName + " ("
         For Each Column As Column In Columns
@@ -112,7 +111,6 @@ Public Class BaseManager
     ''' </summary>
     ''' <param name="TableName">Name of the table</param>
     ''' <param name="Columns">List of columns to add to the table</param>
-    ''' <param name="References">List of keys references to other tables</param>
     ''' <param name="Values">List of values to insert</param>
     Public Shared Sub CreateTable(TableName As String, Columns As List(Of Column), Values As List(Of List(Of String)))
         Dim CreateCommand As New MySqlCommand()

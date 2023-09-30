@@ -55,6 +55,7 @@ Partial Class Form1
         Me.ServerDisplayNameBox = New System.Windows.Forms.TextBox()
         Me.ServerPortLabel = New System.Windows.Forms.Label()
         Me.ServerPortBox = New System.Windows.Forms.NumericUpDown()
+        Me.AdminTimer = New System.Windows.Forms.Timer(Me.components)
         CType(Me.ComServer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -150,6 +151,7 @@ Partial Class Form1
         'SplitContainer1
         '
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer1.IsSplitterFixed = True
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 24)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
@@ -168,6 +170,7 @@ Partial Class Form1
         'SplitContainer2
         '
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.IsSplitterFixed = True
         Me.SplitContainer2.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer2.Name = "SplitContainer2"
         '
@@ -210,9 +213,9 @@ Partial Class Form1
         Me.ServerStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ServerStatus.Location = New System.Drawing.Point(8, 5)
         Me.ServerStatus.Name = "ServerStatus"
-        Me.ServerStatus.Size = New System.Drawing.Size(164, 26)
+        Me.ServerStatus.Size = New System.Drawing.Size(150, 26)
         Me.ServerStatus.TabIndex = 0
-        Me.ServerStatus.Text = "Serveur arrêté"
+        Me.ServerStatus.Text = "Aucune base"
         '
         'TabControl1
         '
@@ -311,6 +314,7 @@ Partial Class Form1
         Me.EditConfigButton.Size = New System.Drawing.Size(75, 23)
         Me.EditConfigButton.TabIndex = 1
         Me.EditConfigButton.Text = "Modifier..."
+        Me.EditConfigButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.EditConfigButton.UseVisualStyleBackColor = True
         '
         'FlowLayoutPanel2
@@ -362,6 +366,10 @@ Partial Class Form1
         Me.ServerPortBox.Name = "ServerPortBox"
         Me.ServerPortBox.Size = New System.Drawing.Size(194, 20)
         Me.ServerPortBox.TabIndex = 3
+        '
+        'AdminTimer
+        '
+        Me.AdminTimer.Interval = 60000
         '
         'Form1
         '
@@ -431,4 +439,5 @@ Partial Class Form1
     Friend WithEvents ServerDisplayNameBox As TextBox
     Friend WithEvents ServerPortLabel As Label
     Friend WithEvents ServerPortBox As NumericUpDown
+    Friend WithEvents AdminTimer As Timer
 End Class

@@ -153,6 +153,9 @@
   <data name="NewBaseMenu" xml:space="preserve">
     <value>&amp;Nouvelle base...</value>
   </data>
+  <data name="NoBase" xml:space="preserve">
+    <value>Aucune base</value>
+  </data>
   <data name="OpenBaseMenu" xml:space="preserve">
     <value>&amp;Ouvrir la base...</value>
   </data>

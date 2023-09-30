@@ -23,7 +23,7 @@ Public Class Form1
         GUILogger.Debug("Getting entry for ArrêterToolStripMenuItem")
         ArrêterToolStripMenuItem.Text = GetString("StopMenu")
         GUILogger.Debug("Getting entry for ServerStatus")
-        ServerStatus.Text = GetString("ServerStatusOff")
+        ServerStatus.Text = GetString("NoBase")
         GUILogger.Debug("Getting entry for OverviewTab")
         OverviewTab.Text = GetString("OverviewTab")
         GUILogger.Debug("Getting entry for ConfigTab")
@@ -40,6 +40,8 @@ Public Class Form1
         ServerDIsplayNameLabel.Text = GetString("ServerDisplayNameLabel")
         GUILogger.Debug("Getting entry for ServerPortLabel")
         ServerPortLabel.Text = GetString("ServerPortLabel")
+
+        ConfigTab.Enabled = False
     End Sub
 
     Private Sub NouvelleBaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles NouvelleBaseToolStripMenuItem.Click
@@ -134,6 +136,7 @@ Public Class Form1
                 New Column("start", "time", New List(Of Column.Attribute) From {Column.Attribute.NotNull}),
                 New Column("end", "time", New List(Of Column.Attribute) From {Column.Attribute.NotNull})
             })
+            ApplicationLogger.Info("Table 'courses' created")
             ApplicationLogger.Debug("Creating tables references")
             AddReferences("students", New List(Of Reference) From {
                 New Reference("class", "classes", "id")
@@ -145,11 +148,25 @@ Public Class Form1
                 New Reference("teacher", "teachers", "id"),
                 New Reference("class", "classes", "id")
             })
-            ApplicationLogger.Info("Table 'courses' created")
             ApplicationLogger.Info("Finished creating database " + NewBaseDialog.BaseNameBox.Text)
-            CloseDatabase()
             If MessageBox.Show("La base à bien été créée. Souhaitez-vous l'ouvrir ?", "Terminé", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                ServerStatus.Text = GetString("ServerStatusOff")
+                ConfigTab.Enabled = True
+            Else
+                CloseDatabase()
+            End If
+        End If
+    End Sub
 
+    Private Sub EditConfigButton_Click(sender As Object, e As EventArgs) Handles EditConfigButton.Click
+        If AdminLogin.ShowDialog = DialogResult.OK Then
+            If UserManager.CheckAdminPassword(AdminLogin.UsernameText.Text, AdminLogin.PasswordText.Text) Then
+                ServerDisplayNameBox.Enabled = True
+                ServerPortBox.Enabled = True
+                EditConfigButton.Enabled = False
+            Else
+                MessageBox.Show("Le mot de pass entré est incorrect ou l'utilisateur n'est pas administrateur. Veuillez réessayer !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                EditConfigButton.PerformClick()
             End If
         End If
     End Sub

@@ -173,6 +173,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Recherche une chaîne localisée semblable à Aucune base.
+        '''</summary>
+        Friend Shared ReadOnly Property NoBase() As String
+            Get
+                Return ResourceManager.GetString("NoBase", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Recherche une chaîne localisée semblable à &amp;Ouvrir la base....
         '''</summary>
         Friend Shared ReadOnly Property OpenBaseMenu() As String
