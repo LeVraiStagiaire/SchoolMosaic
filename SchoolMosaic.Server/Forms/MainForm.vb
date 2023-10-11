@@ -1,9 +1,12 @@
 ﻿Imports SchoolMosaic.Server.BaseManager
 Imports SchoolMosaic.Server.LocalizationManager
-Public Class Form1
+Public Class MainForm
 
     Dim GUILogger As New Logger("GUI")
     Dim ApplicationLogger As New Logger("Application")
+    Dim ServerLogger As New Logger("TCPServer")
+
+    Dim AdminLoggedIn As Boolean = False
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         GUILogger.Info("Initializing language...")
         GUILogger.Debug("Getting entry for FichierToolStripMenuItem")
@@ -90,6 +93,11 @@ Public Class Form1
                     "NULL",
                     "first_day",
                     NewBaseDialog.FirstDayBox.SelectedItem
+                },
+                New List(Of String) From {
+                    "NULL",
+                    "server_port",
+                    "23654"
                 }
             })
             ApplicationLogger.Info("Table 'config' created")
@@ -150,8 +158,12 @@ Public Class Form1
             })
             ApplicationLogger.Info("Finished creating database " + NewBaseDialog.BaseNameBox.Text)
             If MessageBox.Show("La base à bien été créée. Souhaitez-vous l'ouvrir ?", "Terminé", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                FermerBaseToolStripMenuItem.Enabled = True
+                DémarrerToolStripMenuItem.Enabled = True
                 ServerStatus.Text = GetString("ServerStatusOff")
                 ConfigTab.Enabled = True
+                ServerDisplayNameBox.Text = GetConfig("server_display_name")
+                ServerPortBox.Value = GetConfig("server_port")
             Else
                 CloseDatabase()
             End If
@@ -159,15 +171,89 @@ Public Class Form1
     End Sub
 
     Private Sub EditConfigButton_Click(sender As Object, e As EventArgs) Handles EditConfigButton.Click
-        If AdminLogin.ShowDialog = DialogResult.OK Then
-            If UserManager.CheckAdminPassword(AdminLogin.UsernameText.Text, AdminLogin.PasswordText.Text) Then
-                ServerDisplayNameBox.Enabled = True
-                ServerPortBox.Enabled = True
-                EditConfigButton.Enabled = False
-            Else
-                MessageBox.Show("Le mot de pass entré est incorrect ou l'utilisateur n'est pas administrateur. Veuillez réessayer !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                EditConfigButton.PerformClick()
+        If AdminLoggedIn Then
+            SetConfig("server_display_name", ServerDisplayNameBox.Text)
+            SetConfig("server_port", ServerPortBox.Value.ToString)
+            EditConfigButton.Text = "Modifier..."
+            AdminLoggedIn = False
+            FlowLayoutPanel2.Enabled = False
+        Else
+            GUILogger.Debug("Opening AdminLogin dialog...")
+            If AdminLogin.ShowDialog = DialogResult.OK Then
+                GUILogger.Debug("Result: OK")
+                ApplicationLogger.Debug("Checking provided username and password...")
+                If UserManager.CheckAdminPassword(AdminLogin.UsernameText.Text, AdminLogin.PasswordText.Text) Then
+                    ApplicationLogger.Debug("Provided user is admin and password is correct")
+                    AdminLogin.UsernameText.Clear()
+                    AdminLogin.PasswordText.Clear()
+                    FlowLayoutPanel2.Enabled = True
+                    AdminLoggedIn = True
+                    EditConfigButton.Text = "Appliquer"
+                Else
+                    ApplicationLogger.Debug("Provided user is not admin or password is incorrect")
+                    MessageBox.Show("Le mot de pass entré est incorrect ou l'utilisateur n'est pas administrateur. Veuillez réessayer !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    EditConfigButton.PerformClick()
+                End If
             End If
         End If
+    End Sub
+
+    Private Sub OuvrirBaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OuvrirBaseToolStripMenuItem.Click
+        If SelectBase.ShowDialog() = DialogResult.OK Then
+            OpenDatabase()
+            UseDatabase("sm_" + SelectBase.BaseSelectionBox.SelectedItems(0).ToString)
+            SelectBase.BaseSelectionBox.Items.Clear()
+            FermerBaseToolStripMenuItem.Enabled = True
+            DémarrerToolStripMenuItem.Enabled = True
+            ServerDisplayNameBox.Text = GetConfig("server_display_name")
+            ServerPortBox.Value = GetConfig("server_port")
+            ServerStatus.Text = GetString("ServerStatusOff")
+            ConfigTab.Enabled = True
+        End If
+    End Sub
+
+    Private Sub FermerBaseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FermerBaseToolStripMenuItem.Click
+        CloseDatabase()
+        ConfigTab.Enabled = False
+        ServerDisplayNameBox.Clear()
+        ServerPortBox.Value = 1
+        ServerStatus.Text = GetString("NoBase")
+        FermerBaseToolStripMenuItem.Enabled = False
+        DémarrerToolStripMenuItem.Enabled = False
+    End Sub
+
+    Private Sub DémarrerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DémarrerToolStripMenuItem.Click
+        ComServer.ConfigurationString = "Port=" + GetConfig("server_port")
+        ServerLogger.Debug("Initializing server...")
+        ComServer.Initialize()
+        ServerLogger.Debug("Server initialized!")
+        ServerLogger.Info("Starting TCP server...")
+        ComServer.Start()
+    End Sub
+
+    Private Sub ComServer_ServerStarted(sender As Object, e As EventArgs) Handles ComServer.ServerStarted
+        ServerLogger.Info("TCP server started!")
+        ServerStatus.Text = GetString("ServerStatusOn")
+        DémarrerToolStripMenuItem.Enabled = False
+        ArrêterToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub ArrêterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ArrêterToolStripMenuItem.Click
+        ServerLogger.Info("Stopping TCP server...")
+        ComServer.Stop()
+    End Sub
+
+    Private Sub ComServer_ServerStopped(sender As Object, e As EventArgs) Handles ComServer.ServerStopped
+        ServerLogger.Info("TCP server stopped!")
+        ServerStatus.Text = GetString("ServerStatusOff")
+        DémarrerToolStripMenuItem.Enabled = True
+        ArrêterToolStripMenuItem.Enabled = False
+    End Sub
+
+    Private Sub QuitterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QuitterToolStripMenuItem.Click
+        If ComServer.CurrentState = GSF.Communication.ServerState.Running Then
+            ComServer.Stop()
+        End If
+        End
     End Sub
 End Class

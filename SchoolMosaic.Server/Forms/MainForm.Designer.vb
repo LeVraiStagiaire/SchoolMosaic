@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class MainForm
     Inherits System.Windows.Forms.Form
 
     'Form remplace la méthode Dispose pour nettoyer la liste des composants.
@@ -23,7 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.ComServer = New GSF.Communication.TcpServer(Me.components)
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FichierToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -100,31 +100,31 @@ Partial Class Form1
         'NouvelleBaseToolStripMenuItem
         '
         Me.NouvelleBaseToolStripMenuItem.Name = "NouvelleBaseToolStripMenuItem"
-        Me.NouvelleBaseToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.NouvelleBaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.NouvelleBaseToolStripMenuItem.Text = "&Nouvelle base..."
         '
         'OuvrirBaseToolStripMenuItem
         '
         Me.OuvrirBaseToolStripMenuItem.Name = "OuvrirBaseToolStripMenuItem"
-        Me.OuvrirBaseToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.OuvrirBaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OuvrirBaseToolStripMenuItem.Text = "&Ouvrir base..."
         '
         'FermerBaseToolStripMenuItem
         '
         Me.FermerBaseToolStripMenuItem.Enabled = False
         Me.FermerBaseToolStripMenuItem.Name = "FermerBaseToolStripMenuItem"
-        Me.FermerBaseToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.FermerBaseToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.FermerBaseToolStripMenuItem.Text = "&Fermer base"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(154, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(177, 6)
         '
         'QuitterToolStripMenuItem
         '
         Me.QuitterToolStripMenuItem.Name = "QuitterToolStripMenuItem"
-        Me.QuitterToolStripMenuItem.Size = New System.Drawing.Size(157, 22)
+        Me.QuitterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.QuitterToolStripMenuItem.Text = "&Quitter"
         '
         'ServeurToolStripMenuItem
@@ -363,15 +363,18 @@ Partial Class Form1
         'ServerPortBox
         '
         Me.ServerPortBox.Location = New System.Drawing.Point(13, 75)
+        Me.ServerPortBox.Maximum = New Decimal(New Integer() {65125, 0, 0, 0})
+        Me.ServerPortBox.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.ServerPortBox.Name = "ServerPortBox"
         Me.ServerPortBox.Size = New System.Drawing.Size(194, 20)
         Me.ServerPortBox.TabIndex = 3
+        Me.ServerPortBox.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'AdminTimer
         '
         Me.AdminTimer.Interval = 60000
         '
-        'Form1
+        'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -380,7 +383,7 @@ Partial Class Form1
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
-        Me.Name = "Form1"
+        Me.Name = "MainForm"
         Me.Text = "SchoolMosaic Serveur"
         CType(Me.ComServer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)

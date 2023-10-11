@@ -1,4 +1,5 @@
-﻿Imports GSF.Data.Model
+﻿Imports GSF.Data
+Imports GSF.Data.Model
 Imports MySqlConnector
 Imports SchoolMosaic.Server.LocalizationManager
 
@@ -61,7 +62,7 @@ Public Class BaseManager
     ''' Set current database
     ''' </summary>
     ''' <param name="Name">Database name</param>
-    Private Shared Sub UseDatabase(Name As String)
+    Public Shared Sub UseDatabase(Name As String)
         Dim Command As New MySqlCommand("USE " + Name + ";", DBConnection)
         Try
             Command.ExecuteNonQuery()
@@ -178,6 +179,44 @@ Public Class BaseManager
                 MessageBox.Show(ex.Message + vbCrLf + ex.SqlState, GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Next
+    End Sub
+
+    Public Shared Function GetBases() As List(Of String)
+        Dim Dbs As New List(Of String)
+        Dim DBsQuery As String = "SHOW DATABASES;"
+        Dim DBsResult As IDataReader = DBConnection.ExecuteReader(DBsQuery)
+        While DBsResult.Read
+            If DBsResult.GetValue(0).ToString.StartsWith("sm_") Then
+                Dbs.Add(DBsResult.GetValue(0).ToString.Substring(3))
+            End If
+        End While
+        DBsResult.Close()
+        Return Dbs
+    End Function
+
+    Public Shared Function GetConfig(ConfigName As String)
+        Dim Query As String = "SELECT * FROM config WHERE name='" + ConfigName + "';"
+        Dim Result As IDataReader = DBConnection.ExecuteReader(Query)
+        While Result.Read
+            Dim ReturnResult = Result.GetValue(2)
+            Result.Close()
+            Return ReturnResult
+        End While
+        Result.Close()
+        DatabaseLogger.Error("No key found for " + ConfigName)
+        Return New KeyNotFoundException("No key found for " + ConfigName)
+    End Function
+
+    Public Shared Sub SetConfig(ConfigName As String, Value As String)
+        Dim Query As String = "UPDATE config SET value='" + Value + "' WHERE name='" + ConfigName + "';"
+        Dim Command As New MySqlCommand(Query, DBConnection)
+        Try
+            Command.ExecuteNonQuery()
+            DatabaseLogger.Debug("Config '" + ConfigName + "' changed to '" + Value + "'")
+        Catch ex As Exception
+            DatabaseLogger.Fatal("Error while changing '" + ConfigName + "'!", ex)
+            MessageBox.Show("Une erreur est survenue lors de la modification de la configuration !", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 End Class
 

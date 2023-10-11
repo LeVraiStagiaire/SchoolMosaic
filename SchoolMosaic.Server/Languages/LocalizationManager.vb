@@ -1,8 +1,10 @@
 ﻿Public Class LocalizationManager
 
     Shared Resource As Resources.ResXResourceSet
+    Private Shared LangLogger As New Logger("UILanguage")
 
     Public Shared Sub InitLanguage(Language As String)
+        LangLogger.Info("Loading language " + Language)
         Select Case Language
             Case "fr"
                 Resource = New Resources.ResXResourceSet(IO.Directory.GetCurrentDirectory() + "\Languages\Language.French.resx")

@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -159,11 +159,17 @@
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Data\BaseManager.vb" />
     <Compile Include="Data\UserManager.vb" />
-    <Compile Include="Forms\Form1.vb">
+    <Compile Include="Forms\MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Forms\MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectBase.Designer.vb">
+      <DependentUpon>SelectBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectBase.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Languages\Language.French.Designer.vb">
@@ -201,8 +207,11 @@
     <EmbeddedResource Include="Forms\AdminLogin.resx">
       <DependentUpon>AdminLogin.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectBase.resx">
+      <DependentUpon>SelectBase.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Languages\Language.French.resx">
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
