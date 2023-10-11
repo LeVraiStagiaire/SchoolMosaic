@@ -15,3 +15,7 @@ SchoolMosaic est un logiciel de gestion de bases éducatives. Elle permet aux pe
 * Mode conseil de classe pour l'affichage des données essentielles
 
 *Configuration supplémentaire hors serveur nécessaire
+
+# Prérequis
+Avant de pouvoir utiliser le logiciel ou y contribuer, vous devez avoir au préalable installé ces logiciels :
+* MariaDB ou MySQL
